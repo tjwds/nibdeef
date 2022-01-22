@@ -6,7 +6,8 @@ export default function JudgeFeedEntries(props) {
   const [toKeep, setToKeep] = useState([]);
   const [toSkip, setToSkip] = useState([]);
   const [entries, setEntries] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     refreshFeed();
@@ -19,14 +20,27 @@ export default function JudgeFeedEntries(props) {
     );
     const skipString = queryToSkipEntries ? "?skip=" + queryToSkipEntries : "";
     setLoading(true);
-    fetch("api/getEntries/" + skipString, {
-      headers: { Authorization: props.token },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setEntries(data);
-        setLoading(false);
-      });
+    const promises = [
+      fetch("api/getEntries/" + skipString, {
+        headers: { Authorization: props.token },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setEntries(data);
+        }),
+    ];
+    if (!subscriptions.length) {
+      promises.push(
+        fetch("api/getSubscriptions", {
+          headers: { Authorization: props.token },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setSubscriptions(data);
+          })
+      );
+    }
+    Promise.all(promises).then(() => setLoading(false));
   };
 
   if (isLoading) {
@@ -42,6 +56,23 @@ export default function JudgeFeedEntries(props) {
         setToKeep(newToKeep);
       }
     };
+  };
+
+  const getNameForSubscriptionId = (id) => {
+    const answer = subscriptions.filter(
+      (subscription) => subscription.feed_id === id
+    );
+    if (answer[0]) {
+      return (
+        <>
+          <small>
+            <strong>{answer[0].title}</strong>
+          </small>
+          <br />
+        </>
+      );
+    }
+    return <></>;
   };
 
   const entriesString = (entries, toKeepList) => {
@@ -76,11 +107,11 @@ export default function JudgeFeedEntries(props) {
           <p className={styles.entryText}>
             <a href={entry.url}>{entry.title}</a>
             <br />
+            {getNameForSubscriptionId(entry.feed_id)}
             <small>{entry.summary}</small>
           </p>
         </div>
       ))}
-      {/* TODO */}
       <div className={styles.applyContainer}>
         <button onClick={setFeedbinRead} className={styles.applyButton}>
           Mark {entriesString(entries, toKeep)} articles as read
