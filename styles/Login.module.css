@@ -1,8 +1,9 @@
 .login {
     max-width: 500px;
+    width: 100%;
     text-align: center;
     margin: 2rem auto;
-    padding: 2rem 0;
+    padding: 0 2rem;
 }
 
 .login * {
