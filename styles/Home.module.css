@@ -1,0 +1,29 @@
+.container {
+  padding: 2rem;
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.entry {
+  display: flex;
+  outline: 1px solid black;
+}
+
+.entryText {
+  flex-basis: 100%;
+  padding: 1rem 2rem 1rem 0;
+}
+
+.entryCheckbox {
+  width: 50px;
+  margin: 3rem 2rem 0;
+}
+
+.applyContainer {
+  width: 100%;
+  text-align: center;
+}
+
+.applyButton {
+  margin: 2rem auto;
+}
