@@ -1,7 +1,4 @@
-// TODO: user-defined
-const authHeader = btoa(process.env.USERNAME + ":" + process.env.PASSWORD);
-
-const setFeedbinRead = async (toMarkRead) => {
+const setFeedbinRead = async (toMarkRead, authHeader) => {
   const req = await fetch(
     `https://api.feedbin.com/v2/unread_entries/delete.json`,
     {
@@ -18,7 +15,7 @@ const setFeedbinRead = async (toMarkRead) => {
 };
 
 export default function handler(req, res) {
-  setFeedbinRead(JSON.parse(req.body)).then((data) =>
+  setFeedbinRead(JSON.parse(req.body), req.headers.authorization).then((data) =>
     res.status(200).json(data)
   );
 }

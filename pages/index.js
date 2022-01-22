@@ -1,89 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-import styles from "../styles/Home.module.css";
+import JudgeFeedEntries from "../src/components/JudgeFeedEntries";
+import Login from "../src/components/Login";
 
-export default function Home(props) {
-  const [toKeep, setToKeep] = useState([]);
-  const [toSkip, setToSkip] = useState([]);
-  const [entries, setEntries] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+export default function Application(props) {
+  const [credentials, setCredentials] = useState("");
 
-  useEffect(() => {
-    refreshFeed();
-  }, []);
-
-  const refreshFeed = (skip = []) => {
-    const queryToSkipEntries = skip.reduce(
-      (previous, next) => previous + "," + next,
-      ""
+  const addCredentials = (event) => {
+    event.preventDefault();
+    setCredentials(
+      btoa(event.target.username.value + ":" + event.target.password.value)
     );
-    const skipString = queryToSkipEntries ? "?skip=" + queryToSkipEntries : "";
-    setLoading(true);
-    fetch("api/getEntries/" + skipString)
-      .then((res) => res.json())
-      .then((data) => {
-        setEntries(data);
-        setLoading(false);
-      });
   };
 
-  if (isLoading) {
-    return <div className={styles.container}>Loading…</div>;
+  if (!credentials) {
+    return <Login addCredentials={addCredentials} />;
+  } else {
+    return <JudgeFeedEntries token={credentials} />;
   }
-
-  const generateToggleKeepEntry = function (id) {
-    return function (event) {
-      if (event.target.checked) {
-        setToKeep([...toKeep, id]);
-      } else {
-        let newToKeep = toKeep.slice().filter((item) => item !== id);
-        setToKeep(newToKeep);
-      }
-    };
-  };
-
-  const entriesString = (entries, toKeepList) => {
-    const len = entries.length;
-    return `${len - toKeepList.length}/${len}`;
-  };
-
-  const setFeedbinRead = async (event) => {
-    event.preventDefault()
-    // TODO API URL everywhere
-    const toRemove = entries
-      .map((entry) => entry.id)
-      .filter((id) => !toKeep.includes(id));
-    setToSkip([...toSkip, toKeep]);
-    const res = await fetch(`api/setRead`, {
-      method: "POST",
-      body: JSON.stringify(toRemove),
-    });
-    refreshFeed([...toSkip, toKeep]);
-    setToKeep([]);
-  };
-
-  return (
-    <div className={styles.container}>
-      {entries.map((entry, index) => (
-        <div className={styles.entry} key={index}>
-          <input
-            type="checkbox"
-            className={styles.entryCheckbox}
-            onClick={generateToggleKeepEntry(entry.id)}
-          ></input>
-          <p className={styles.entryText}>
-            <a href={entry.url}>{entry.title}</a>
-            <br />
-            <small>{entry.summary}</small>
-          </p>
-        </div>
-      ))}
-      {/* TODO */}
-      <div className={styles.applyContainer}>
-        <button onClick={setFeedbinRead} className={styles.applyButton}>
-          Mark {entriesString(entries, toKeep)} articles as read
-        </button>
-      </div>
-    </div>
-  );
 }
