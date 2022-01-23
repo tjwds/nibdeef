@@ -105,7 +105,7 @@ export default function JudgeFeedEntries(props) {
             onClick={generateToggleKeepEntry(entry.id)}
           ></input>
           <p className={styles.entryText}>
-            <a href={entry.url}>{entry.title}</a>
+            <a href={entry.url} target="_blank" rel="noreferrer">{entry.title}</a>
             <br />
             {getNameForSubscriptionId(entry.feed_id)}
             <small>{entry.summary}</small>
