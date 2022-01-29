@@ -1,6 +1,25 @@
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 import styles from "../../styles/JudgeFeedEntries.module.css";
+
+const renderImage = (entry) => {
+  let imageObj = entry.images && entry.images.size_1;
+  if (imageObj) {
+    return (
+      <div className={styles.entryImage}>
+        <Image
+          src={imageObj.cdn_url}
+          width={imageObj.width}
+          height={imageObj.height}
+          alt=""
+        />
+      </div>
+    );
+  } else {
+    return <></>;
+  }
+};
 
 export default function JudgeFeedEntries(props) {
   const [toKeep, setToKeep] = useState([]);
@@ -104,12 +123,17 @@ export default function JudgeFeedEntries(props) {
             className={styles.entryCheckbox}
             onClick={generateToggleKeepEntry(entry.id)}
           ></input>
-          <p className={styles.entryText}>
-            <a href={entry.url} target="_blank" rel="noreferrer">{entry.title}</a>
-            <br />
-            {getNameForSubscriptionId(entry.feed_id)}
-            <small>{entry.summary}</small>
-          </p>
+          <div className={styles.entryContent}>
+            <p className={styles.entryText}>
+              <a href={entry.url} target="_blank" rel="noreferrer">
+                {entry.title}
+              </a>
+              <br />
+              {getNameForSubscriptionId(entry.feed_id)}
+              <small>{entry.summary}</small>
+            </p>
+            {renderImage(entry)}
+          </div>
         </div>
       ))}
       <div className={styles.applyContainer}>

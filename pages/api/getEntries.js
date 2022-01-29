@@ -12,7 +12,9 @@ export default function handler(req, res) {
         .slice(0, 10);
       getFeedbinData(
         "entries",
-        `?ids=` + toFetch.reduce((previous, next) => previous + "," + next),
+        `?ids=` +
+          toFetch.reduce((previous, next) => previous + "," + next) +
+          "&mode=extended",
         req.headers.authorization
       ).then((data) => res.status(200).json(data));
     }

@@ -4,6 +4,10 @@
   margin: 0 auto;
 }
 
+.entryContent {
+  display: flex;
+}
+
 .entry {
   display: flex;
   outline: 1px solid black;
@@ -13,6 +17,20 @@
 .entryText {
   flex-basis: 100%;
   padding: 1rem 2rem 1rem 0;
+}
+
+.entryImage {
+  margin: 2rem;
+}
+
+@media (max-width: 700px) {
+  .entryContent {
+    flex-direction: column;
+  }
+
+  .entryImage {
+    margin: 0 2rem 2rem 0;
+  }
 }
 
 .entryCheckbox {
