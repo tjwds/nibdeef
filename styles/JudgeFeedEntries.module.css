@@ -34,8 +34,9 @@
 }
 
 .entryCheckbox {
-  width: 50px;
-  margin: 3rem 2rem 0;
+  width: 30px;
+  height: 100%;
+  margin: 0 2rem;
   flex-shrink: 0;
 }
 

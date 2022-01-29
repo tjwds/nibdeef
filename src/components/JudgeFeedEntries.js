@@ -118,11 +118,13 @@ export default function JudgeFeedEntries(props) {
     <div className={styles.container}>
       {entries.map((entry, index) => (
         <div className={styles.entry} key={index}>
-          <input
-            type="checkbox"
-            className={styles.entryCheckbox}
-            onClick={generateToggleKeepEntry(entry.id)}
-          ></input>
+          <div>
+            <input
+              type="checkbox"
+              className={styles.entryCheckbox}
+              onClick={generateToggleKeepEntry(entry.id)}
+            ></input>
+          </div>
           <div className={styles.entryContent}>
             <p className={styles.entryText}>
               <a href={entry.url} target="_blank" rel="noreferrer">
