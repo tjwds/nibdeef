@@ -27,5 +27,6 @@
 }
 
 .applyButton {
-  margin: 2rem auto;
+  margin: 2rem auto 4rem;
+  font-size: 1.2rem;
 }
