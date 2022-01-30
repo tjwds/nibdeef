@@ -9,7 +9,7 @@ export default function handler(req, res) {
         .slice()
         .reverse()
         .filter((entry) => !skipArr.includes(entry))
-        .slice(0, 10);
+        .slice(0, 20);
       getFeedbinData(
         "entries",
         `?ids=` +
