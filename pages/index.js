@@ -1,21 +1,14 @@
-import { useState } from "react";
+import useCredentials from "../src/hooks/useCredentials";
 
 import JudgeFeedEntries from "../src/components/JudgeFeedEntries";
 import Login from "../src/components/Login";
 
-export default function Application(props) {
-  const [credentials, setCredentials] = useState("");
+export default function Application() {
+  const [credentials, setCredentials] = useCredentials();
 
-  const addCredentials = (event) => {
-    event.preventDefault();
-    setCredentials(
-      btoa(event.target.username.value + ":" + event.target.password.value)
-    );
-  };
-
-  if (!credentials) {
-    return <Login addCredentials={addCredentials} />;
-  } else {
-    return <JudgeFeedEntries token={credentials} />;
-  }
+  return credentials ? (
+    <JudgeFeedEntries credentials={credentials} />
+  ) : (
+    <Login setCredentials={setCredentials} />
+  );
 }

@@ -17,6 +17,12 @@
     margin-bottom: 0.5rem;
 }
 
+.storeLocally {
+    float: left;
+    width: auto;
+    margin-right: 1rem;
+}
+
 .login button {
     margin: 2rem 0;
 }

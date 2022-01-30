@@ -31,6 +31,7 @@ export default function JudgeFeedEntries(props) {
 
   useEffect(() => {
     refreshFeed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refreshFeed = (skip = []) => {
@@ -42,7 +43,7 @@ export default function JudgeFeedEntries(props) {
     setLoading(true);
     const promises = [
       fetch("api/getEntries/" + skipString, {
-        headers: { Authorization: props.token },
+        headers: { Authorization: props.credentials },
       })
         .then((res) => res.json())
         .then((data) => {
@@ -53,7 +54,7 @@ export default function JudgeFeedEntries(props) {
     if (!subscriptions.length) {
       promises.push(
         fetch("api/getSubscriptions", {
-          headers: { Authorization: props.token },
+          headers: { Authorization: props.credentials },
         })
           .then((res) => res.json())
           .then((data) => {
@@ -110,7 +111,7 @@ export default function JudgeFeedEntries(props) {
     const res = await fetch(`api/setRead`, {
       method: "POST",
       body: JSON.stringify(toRemove),
-      headers: { Authorization: props.token },
+      headers: { Authorization: props.credentials },
     });
     refreshFeed([...toSkip, toKeep]);
     setToKeep([]);
