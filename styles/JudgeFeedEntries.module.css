@@ -4,6 +4,17 @@
   margin: 0 auto;
 }
 
+.unreadCount {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 100;
+  text-align: right;
+}
+
+.unreadCountNumber {
+  font-weight: 300;
+}
+
 .entryContent {
   display: flex;
 }

@@ -16,7 +16,9 @@ export default function handler(req, res) {
           toFetch.reduce((previous, next) => previous + "," + next) +
           "&mode=extended",
         req.headers.authorization
-      ).then((data) => res.status(200).json(data));
+      ).then((data) =>
+        res.status(200).json({ unreads: data, remaining: entries.length })
+      );
     }
   );
 }

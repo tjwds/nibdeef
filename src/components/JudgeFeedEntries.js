@@ -25,6 +25,7 @@ export default function JudgeFeedEntries(props) {
   const [toKeep, setToKeep] = useState([]);
   const [toSkip, setToSkip] = useState([]);
   const [entries, setEntries] = useState([]);
+  const [unreadCount, setUnreadCount] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -45,7 +46,8 @@ export default function JudgeFeedEntries(props) {
       })
         .then((res) => res.json())
         .then((data) => {
-          setEntries(data);
+          setUnreadCount(data.remaining);
+          setEntries(data.unreads);
         }),
     ];
     if (!subscriptions.length) {
@@ -116,6 +118,11 @@ export default function JudgeFeedEntries(props) {
 
   return (
     <div className={styles.container}>
+      <div className={styles.unreadCount}>
+        {entries.length}/
+        <span className={styles.unreadCountNumber}>{unreadCount}</span> unread
+        entries
+      </div>
       {entries.map((entry, index) => (
         <div className={styles.entry} key={index}>
           <div>
