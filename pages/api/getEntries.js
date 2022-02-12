@@ -16,9 +16,15 @@ export default function handler(req, res) {
           toFetch.reduce((previous, next) => previous + "," + next) +
           "&mode=extended",
         req.headers.authorization
-      ).then((data) =>
-        res.status(200).json({ unreads: data, remaining: entries.length })
-      );
+      ).then((resData) => {
+        const data = resData.map((item) => {
+          const { content, ...rest } = item;
+          return rest;
+        });
+        return res
+          .status(200)
+          .json({ unreads: data, remaining: entries.length });
+      });
     }
   );
 }
