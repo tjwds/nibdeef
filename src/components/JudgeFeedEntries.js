@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
+import linkify from "../../utils/linkify.js";
+
 import styles from "../../styles/JudgeFeedEntries.module.css";
 
 const renderImage = (entry) => {
@@ -139,7 +141,10 @@ export default function JudgeFeedEntries(props) {
               </a>
               <br />
               {getNameForSubscriptionId(entry.feed_id)}
-              <small className={styles.entryPreview}>{entry.summary}</small>
+              <small
+                className={styles.entryPreview}
+                dangerouslySetInnerHTML={linkify(entry.summary)}
+              />
             </p>
             {renderImage(entry)}
           </div>
