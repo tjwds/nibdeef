@@ -4,10 +4,31 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-size: 16px;
+  background: #1a1a20;
+}
+
+body {
+  background: linear-gradient(#1a1a20 30%, #1a1a20);
+  color: #fcfff2;
+  min-height: 100vh;
+}
+
+input, button {
+  background: #212224;
+  border: none;
+  outline: 2px solid white;
+  color: white;
+  padding: 0.5em 1em;
+}
+
+label {
+  font-weight: bold;
+  padding-bottom: 0.3em;
 }
 
 a {
-  color: inherit;
+  color: #ccf6d0;
   text-decoration: none;
 }
 

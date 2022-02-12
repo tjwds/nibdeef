@@ -2,8 +2,8 @@
     max-width: 500px;
     width: 100%;
     text-align: center;
-    margin: 2rem auto;
-    padding: 0 2rem;
+    margin: 0 auto;
+    padding: 2rem 2rem 0;
 }
 
 .login * {

@@ -88,9 +88,8 @@ export default function JudgeFeedEntries(props) {
       return (
         <>
           <small>
-            <strong>{answer[0].title}</strong>
+            <strong className={styles.feedName}>{answer[0].title}</strong>
           </small>
-          <br />
         </>
       );
     }
@@ -140,7 +139,7 @@ export default function JudgeFeedEntries(props) {
               </a>
               <br />
               {getNameForSubscriptionId(entry.feed_id)}
-              <small>{entry.summary}</small>
+              <small className={styles.entryPreview}>{entry.summary}</small>
             </p>
             {renderImage(entry)}
           </div>
