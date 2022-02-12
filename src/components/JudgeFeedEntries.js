@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import linkify from "../../utils/linkify.js";
+import stripTags from "../../utils/stripTags.js";
 
 import styles from "../../styles/JudgeFeedEntries.module.css";
 
@@ -137,7 +138,7 @@ export default function JudgeFeedEntries(props) {
           <div className={styles.entryContent}>
             <p className={styles.entryText}>
               <a href={entry.url} target="_blank" rel="noreferrer">
-                {entry.title}
+                {stripTags(entry.title || "(No title)")}
               </a>
               <br />
               {getNameForSubscriptionId(entry.feed_id)}
