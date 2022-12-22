@@ -74,3 +74,9 @@
   margin: 2rem auto 4rem;
   font-size: 1.2rem;
 }
+
+.selectFeed {
+  width: 100%;
+  display: flex;
+  place-content: flex-end;
+}

@@ -30,22 +30,35 @@ export default function JudgeFeedEntries(props) {
   const [entries, setEntries] = useState([]);
   const [unreadCount, setUnreadCount] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
+  const [taggings, setTaggings] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const [selectedFeeds, setSelectedFeeds] = useState([]);
+  const [selectedFilterValue, setSelectedFilterValue] = useState("All");
 
   useEffect(() => {
     refreshFeed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const refreshFeed = (skip = []) => {
+  const refreshFeed = (skip = [], sub = []) => {
+    const searchParams = new URLSearchParams();
     const queryToSkipEntries = skip.reduce(
-      (previous, next) => previous + "," + next,
+      (previous, next) => previous + (previous ? "," : "") + next,
       ""
     );
-    const skipString = queryToSkipEntries ? "?skip=" + queryToSkipEntries : "";
+    if (queryToSkipEntries) {
+      searchParams.set("skip", queryToSkipEntries);
+    }
+    const queryToSubEntries = (sub.length ? sub : selectedFeeds).reduce(
+      (previous, next) => previous + (previous ? "," : "") + next,
+      ""
+    );
+    if (queryToSubEntries) {
+      searchParams.set("sub", queryToSubEntries);
+    }
     setLoading(true);
     const promises = [
-      fetch("api/getEntries/" + skipString, {
+      fetch("api/getEntries/?" + searchParams.toString(), {
         headers: { Authorization: props.credentials },
       })
         .then((res) => res.json())
@@ -54,6 +67,27 @@ export default function JudgeFeedEntries(props) {
           setEntries(data.unreads);
         }),
     ];
+    if (!taggings.length) {
+      promises.push(
+        fetch("api/getTaggings", {
+          headers: { Authorization: props.credentials },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setTaggings(
+              data.reduce((obj, tag) => {
+                let target = obj[tag.name];
+                if (!target) {
+                  target = obj[tag.name] = [];
+                }
+
+                target.push(tag);
+                return obj;
+              }, {})
+            );
+          })
+      );
+    }
     if (!subscriptions.length) {
       promises.push(
         fetch("api/getSubscriptions", {
@@ -99,6 +133,41 @@ export default function JudgeFeedEntries(props) {
     return <></>;
   };
 
+  const selectOption = (e) => {
+    const { value } = e.target;
+
+    let newSelection = [];
+    if (value !== "All") {
+      const target = taggings[value];
+      if (target && target.length) {
+        newSelection = target.map((v) => v.feed_id);
+      }
+    }
+
+    setSelectedFeeds(newSelection);
+    setSelectedFilterValue(value);
+    refreshFeed([], newSelection);
+  };
+
+  const TagFilterSelect = () => {
+    return (
+      <div className={styles.selectFeed}>
+        <select onChange={selectOption} value={selectedFilterValue}>
+          <option value="All">All</option>
+          {Object.entries(taggings)
+            .sort((a, b) => a[0].localeCompare(b[0]))
+            .map(([name], id) => {
+              return (
+                <option key={`select${id}`} value={name}>
+                  {name}
+                </option>
+              );
+            })}
+        </select>
+      </div>
+    );
+  };
+
   const entriesString = (entries, toKeepList) => {
     const len = entries.length;
     return `${len - toKeepList.length}/${len}`;
@@ -126,6 +195,7 @@ export default function JudgeFeedEntries(props) {
         <span className={styles.unreadCountNumber}>{unreadCount}</span> unread
         entries
       </div>
+      <TagFilterSelect />
       {entries.map((entry, index) => (
         <div className={styles.entry} key={index}>
           <div>
